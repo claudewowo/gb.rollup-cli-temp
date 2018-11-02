@@ -1,4 +1,4 @@
 import foo from './foo';
-import './lib/index';
+import 'regenerator-runtime/runtime';
 
 foo();

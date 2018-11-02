@@ -53,22 +53,19 @@ const buildTime = {
 export const version = buildTime.version();
 
 export const baseConfig = {
-    input: 'src/lib/index.js',
+    input: 'src/lib/polyfill/polyfill.js',
     output: {
         format: 'iife',
         file: `dist/polyfill.${env}.js`,
         banner: `/* @license ${buildTime.copyright()} */\n`,
         sourcemap: env === 'dev',
     },
-    watch: {
-        include: 'src/**',
-    },
     plugins: [
         json(),
-        commonjs(),
         resolve(),
         babel({
-            // exclude: 'node_modules/**',
+            exclude: 'node_modules/**',
         }),
+        commonjs(),
     ],
 }
