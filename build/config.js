@@ -9,6 +9,9 @@ export default {
         use: true,              // 是否自动插入 html 用于测试
         source: 'src/template/index.html', // html 模版来源
         filename: 'index.html', // 输出文件名 (位于 dist 文件夹下)
-        injectFiles: [],        // 插入到 html 中的文件名, 如果不指定则
+        injectMode: {           // 插入到 html 中的文件名, 如果不指定则
+            position: 0,        // 页面中 script 标签的位置, 0 表示 body 下第 0 个 script 位置, 如果在html里已经存在 script, 将会插入到这个 script 前面
+            files: ['es'],
+        },
     }
 }

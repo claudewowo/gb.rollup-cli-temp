@@ -7,7 +7,7 @@ import babel from 'rollup-plugin-babel';
 import html from 'rollup-plugin-fill-html';
 import del from 'rollup-plugin-delete';
 import license from 'rollup-plugin-license';
-// import template from './rollup-plugin-template-html';
+import template from './plugins/rollup-plugin-template-html';
 import configs from './config.js';
 
 const resolve = p => path.resolve(__dirname, '../', p);
@@ -68,7 +68,7 @@ const rollupConfig = {
     input: resolve(configs.entry),
     output: [
         {
-            format: 'esm',
+            format: 'es',
             file: `${fileFormat}es.js`,
             // banner,
             sourcemap,
@@ -95,11 +95,6 @@ const rollupConfig = {
         }),
         commonjs(),
         filesize(),
-        /* template({
-            template: resolve(configs.template.source),
-            filename: configs.template.filename,
-            injectFiles: []
-        }), */
         license({ banner }),
     ],
 };
@@ -110,14 +105,10 @@ if (configs.external.length) {
 
 if (configs.template.use) {
     rollupConfig.plugins.push(
-        html({
+        template({
             template: resolve(configs.template.source),
             filename: configs.template.filename,
-            /* externals: {
-                type: 'js',
-                file: `${fileFormat}-cjs.js`,
-                pos: 'after',
-            }, */
+            injectMode: configs.template.injectMode,
         }),
     )
 }
