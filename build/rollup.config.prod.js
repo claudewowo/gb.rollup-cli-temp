@@ -1,10 +1,11 @@
+import configs from './config.js';
 import { uglify } from 'rollup-plugin-uglify';
-import { baseConfig, version } from './base.config';
+import { baseConfig } from './base.config';
 
-baseConfig.output.banner = `/* @license ${version} */\n`;
-
-baseConfig.plugins.push(
-    uglify(),
-);
+if (configs.uglify) {
+    baseConfig.plugins.push(
+        uglify(),
+    );
+}
 
 export default baseConfig;

@@ -1,4 +1,4 @@
-/* @license 2018-11-02 18:16:03 */
+/* @license 2018-11-05 10:29:38 */
 
 (function () {
 	'use strict';
@@ -3919,6 +3919,211 @@
 	"pop,reverse,shift,keys,values,entries,indexOf,every,some,forEach,map,filter,find,findIndex,includes,join,slice,concat,push,splice,unshift,sort,lastIndexOf,reduce,reduceRight,copyWithin,fill".split(",").forEach(function (key) {
 	  [][key] && define(Array, key, Function.call.bind([][key]));
 	});
+
+	/* eslint-disable no-extend-native */
+	if (window.Element) {
+	  if (!Element.prototype.matches) {
+	    Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+	  }
+
+	  if (!Element.prototype.closest) {
+	    Element.prototype.closest = function (s) {
+	      // eslint-disable-line
+	      var el = this;
+	      if (!document.documentElement.contains(el)) return null;
+
+	      do {
+	        if (el.matches(s)) return el;
+	        el = el.parentElement;
+	      } while (el !== null);
+
+	      return null;
+	    };
+	  }
+	} // Begin dataset code
+
+
+	if (!document.documentElement.dataset && ( // FF is empty while IE gives empty object
+	!Object.getOwnPropertyDescriptor(Element.prototype, 'dataset') || !Object.getOwnPropertyDescriptor(Element.prototype, 'dataset').get)) {
+	  var propDescriptor = {
+	    get: function get() {
+
+	      var hTML5DOMStringMap = {};
+	      var attrVal;
+	      var attrName;
+	      var propName;
+	      var attribute;
+	      var attributes = this.attributes;
+	      var attsLength = attributes.length;
+
+	      var toUpperCase = function toUpperCase(n0) {
+	        return n0.charAt(1).toUpperCase();
+	      };
+
+	      for (var i = 0; i < attsLength; i += 1) {
+	        attribute = attributes[i]; // Fix: This test really should allow any XML Name without
+	        //         colons (and non-uppercase for XHTML)
+
+	        if (attribute && attribute.name && /^data-\w[\w-]*$/.test(attribute.name)) {
+	          attrVal = attribute.value;
+	          attrName = attribute.name; // Change to CamelCase
+
+	          propName = attrName.substr(5).replace(/-./g, toUpperCase);
+	          hTML5DOMStringMap[propName] = attrVal;
+	        }
+	      }
+
+	      return hTML5DOMStringMap;
+	    }
+	  };
+	  Object.defineProperty(Element.prototype, 'dataset', propDescriptor);
+	} // Overwrites native 'children' prototype.
+	// Adds Document & DocumentFragment support for IE9 & Safari.
+	// Returns array instead of HTMLCollection.
+
+
+	(function (constructor) {
+	  if (constructor && constructor.prototype && constructor.prototype.children == null) {
+	    Object.defineProperty(constructor.prototype, 'children', {
+	      get: function get() {
+	        return this.childNodes.filter(function (node) {
+	          return node.nodeType === 1;
+	        });
+	      }
+	    });
+	  }
+	})(window.Node || window.Element);
+
+	/* eslint-disable no-extend-native */
+	// polyfill 重复
+	// if (typeof Array.prototype.forEach !== 'function') {
+	//     Array.prototype.forEach = (fn, context) => {
+	//         for (let k = 0, { length } = this; k < length; k += 1) {
+	//             if (typeof fn === 'function' && Object.prototype.hasOwnProperty.call(this, k)) {
+	//                 fn.call(context, this[k], k, this);
+	//             }
+	//         }
+	//     };
+	// }
+	//
+	// if (typeof Array.prototype.map !== 'function') {
+	//     Array.prototype.map = (fn, context) => {
+	//         const arr = [];
+	//         if (typeof fn === 'function') {
+	//             for (let k = 0, { length } = this; k < length; k += 1) {
+	//                 arr.push(fn.call(context, this[k], k, this));
+	//             }
+	//         }
+	//         return arr;
+	//     };
+	// }
+	// if (typeof Array.prototype.filter !== 'function') {
+	//     Array.prototype.filter = (fn, context) => {
+	//         const arr = [];
+	//         if (typeof fn === 'function') {
+	//             for (let k = 0, { length } = this; k < length; k += 1) {
+	//                 if (fn.call(context, this[k], k, this)) {
+	//                     arr.push(this[k]);
+	//                 }
+	//             }
+	//         }
+	//         return arr;
+	//     };
+	// }
+	// if (typeof Array.prototype.some !== 'function') {
+	//     Array.prototype.some = (fn, context) => {
+	//         let passed = false;
+	//         if (typeof fn === 'function') {
+	//             for (let k = 0, { length } = this; k < length; k += 1) {
+	//                 if (passed === true) break;
+	//                 passed = !!fn.call(context, this[k], k, this);
+	//             }
+	//         }
+	//         return passed;
+	//     };
+	// }
+	// if (typeof Array.prototype.every !== 'function') {
+	//     Array.prototype.every = (fn, context) => {
+	//         let passed = true;
+	//         if (typeof fn === 'function') {
+	//             for (let k = 0, { length } = this; k < length; k += 1) {
+	//                 if (passed === false) break;
+	//                 passed = !!fn.call(context, this[k], k, this);
+	//             }
+	//         }
+	//         return passed;
+	//     };
+	// }
+	// if (typeof Array.prototype.reduce !== 'function') {
+	//     Array.prototype.reduce = (callback, initialValue) => {
+	//         let previous = initialValue;
+	//         let k = 0;
+	//         const { length } = this;
+	//         if (typeof initialValue === 'undefined') {
+	//             [previous] = this;
+	//             k = 1;
+	//         }
+	//
+	//         if (typeof callback === 'function') {
+	//             for (k; k < length; k += 1) {
+	//                 if (Object.prototype.hasOwnProperty.call(this, k)) {
+	//                     previous = callback(previous, this[k], k, this);
+	//                 }
+	//             }
+	//         }
+	//         return previous;
+	//     };
+	// }
+	// if (typeof Array.prototype.reduceRight !== 'function') {
+	//     Array.prototype.reduceRight = (callback, initialValue) => {
+	//         const { length } = this;
+	//         let k = length - 1;
+	//         let previous = initialValue;
+	//         if (typeof initialValue === 'undefined') {
+	//             previous = this[length - 1];
+	//             k -= 1;
+	//         }
+	//         if (typeof callback === 'function') {
+	//             for (k; k > -1; k -= 1) {
+	//                 if (Object.prototype.hasOwnProperty.call(this, k)) {
+	//                     previous = callback(previous, this[k], k, this);
+	//                 }
+	//             }
+	//         }
+	//         return previous;
+	//     };
+	// }
+
+	/* IE10等部分浏览器获取window.location.origin为undefined */
+	if (!window.location.origin) {
+	  var winlocation = window.location;
+	  var locationPort = winlocation.port ? ":".concat(winlocation.port) : '';
+	  winlocation.origin = "".concat(winlocation.protocol, "//").concat(winlocation.hostname).concat(locationPort);
+	}
+
+	/* eslint-disable */
+	(function () {
+	  var lastTime = 0;
+	  var vendors = ['ms', 'moz', 'webkit', 'o'];
+
+	  for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	    window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+	    window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	  }
+
+	  if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+	    var currTime = new Date().getTime();
+	    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	    var id = window.setTimeout(function () {
+	      callback(currTime + timeToCall);
+	    }, timeToCall);
+	    lastTime = currTime + timeToCall;
+	    return id;
+	  };
+	  if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+	    clearTimeout(id);
+	  };
+	})();
 
 }());
 //# sourceMappingURL=polyfill.dev.js.map

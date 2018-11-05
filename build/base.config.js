@@ -1,9 +1,19 @@
+import path from 'path';
 import json from 'rollup-plugin-json';
-import resolve from 'rollup-plugin-node-resolve';
+import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import filesize from 'rollup-plugin-filesize';
 import babel from 'rollup-plugin-babel';
+import html from 'rollup-plugin-fill-html';
+import del from 'rollup-plugin-delete';
+import license from 'rollup-plugin-license';
+// import template from './rollup-plugin-template-html';
+import configs from './config.js';
+
+const resolve = p => path.resolve(__dirname, '../', p);
 
 const env = process.env.npm_lifecycle_event;
+const sourcemap = env === 'dev';
 
 const buildTime = {
     init(format) {
@@ -50,22 +60,66 @@ const buildTime = {
     }
 }
 
-export const version = buildTime.version();
+const timeForCopyright = buildTime.copyright();
+const fileFormat = `${configs.filename}.${env === 'build' ? 'min' : 'dev'}.`;
+const banner = `@license ${configs.copyright} v${configs.version} ${timeForCopyright}\n`;
 
-export const baseConfig = {
-    input: 'src/lib/polyfill/polyfill.js',
-    output: {
-        format: 'iife',
-        file: `dist/polyfill.${env}.js`,
-        banner: `/* @license ${buildTime.copyright()} */\n`,
-        sourcemap: env === 'dev',
-    },
+const rollupConfig = {
+    input: resolve(configs.entry),
+    output: [
+        {
+            format: 'esm',
+            file: `${fileFormat}es.js`,
+            // banner,
+            sourcemap,
+        },
+        /* {
+            format: 'cjs',
+            file: `${fileFormat}cjs.js`,
+            // banner,
+            sourcemap,
+        },
+        {
+            format: 'iife',
+            file: `${fileFormat}iife.js`,
+            // banner,
+            sourcemap,
+        }, */
+    ],
     plugins: [
+        del({ targets: ['dist/*'] }),
         json(),
-        resolve(),
+        nodeResolve(),
         babel({
             exclude: 'node_modules/**',
         }),
         commonjs(),
+        filesize(),
+        /* template({
+            template: resolve(configs.template.source),
+            filename: configs.template.filename,
+            injectFiles: []
+        }), */
+        license({ banner }),
     ],
+};
+
+if (configs.external.length) {
+    rollupConfig.external = configs.external;
 }
+
+if (configs.template.use) {
+    rollupConfig.plugins.push(
+        html({
+            template: resolve(configs.template.source),
+            filename: configs.template.filename,
+            /* externals: {
+                type: 'js',
+                file: `${fileFormat}-cjs.js`,
+                pos: 'after',
+            }, */
+        }),
+    )
+}
+
+export const baseConfig = rollupConfig;
