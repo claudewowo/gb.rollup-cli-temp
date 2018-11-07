@@ -2,6 +2,8 @@
  * @license gb-fe v0.0.1 2018-11-07 17:37:15
  */
 
+'use strict';
+
 /*
  * classList.js: Cross-browser full element.classList implementation.
  * 1.1.20150312

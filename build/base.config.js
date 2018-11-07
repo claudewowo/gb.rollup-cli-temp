@@ -4,10 +4,9 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import filesize from 'rollup-plugin-filesize';
 import babel from 'rollup-plugin-babel';
-import html from 'rollup-plugin-fill-html';
+// import html from 'rollup-plugin-fill-html';
 import del from 'rollup-plugin-delete';
 import license from 'rollup-plugin-license';
-import template from './plugins/rollup-plugin-template-html';
 import configs from './config.js';
 
 const resolve = p => path.resolve(__dirname, '../', p);
@@ -63,29 +62,21 @@ const buildTime = {
 const timeForCopyright = buildTime.copyright();
 const fileFormat = `${configs.filename}.${env === 'build' ? 'min' : 'dev'}.`;
 const banner = `@license ${configs.copyright} v${configs.version} ${timeForCopyright}\n`;
+const outputs = [];
+
+for (let index in configs.buildFiles) {
+    const item = configs.buildFiles[index];
+    outputs.push({
+        format: item,
+        file: `${fileFormat}${item}.js`,
+        // banner,
+        sourcemap,
+    })
+}
 
 const rollupConfig = {
     input: resolve(configs.entry),
-    output: [
-        {
-            format: 'es',
-            file: `${fileFormat}es.js`,
-            // banner,
-            sourcemap,
-        },
-        /* {
-            format: 'cjs',
-            file: `${fileFormat}cjs.js`,
-            // banner,
-            sourcemap,
-        },
-        {
-            format: 'iife',
-            file: `${fileFormat}iife.js`,
-            // banner,
-            sourcemap,
-        }, */
-    ],
+    output: outputs,
     plugins: [
         del({ targets: ['dist/*'] }),
         json(),
@@ -101,16 +92,6 @@ const rollupConfig = {
 
 if (configs.external.length) {
     rollupConfig.external = configs.external;
-}
-
-if (configs.template.use) {
-    rollupConfig.plugins.push(
-        template({
-            template: resolve(configs.template.source),
-            filename: configs.template.filename,
-            injectMode: configs.template.injectMode,
-        }),
-    )
 }
 
 export const baseConfig = rollupConfig;
