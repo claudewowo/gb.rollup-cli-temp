@@ -1,7 +1,7 @@
 {
-  "name": "rollup-cli",
+  "name": "rollup-cli-temp",
   "version": "1.0.0",
-  "description": "rollup-build-cli",
+  "description": "rollup-build-cli-core",
   "scripts": {
     "dev": "rollup --config build/rollup.config.dev.js",
     "watch": "rollup -w --config build/rollup.config.dev.js",
