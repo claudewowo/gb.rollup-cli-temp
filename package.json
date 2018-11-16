@@ -1,6 +1,6 @@
 {
   "name": "gb.rollup-cli-temp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "rollup-build-cli-core",
   "scripts": {
     "dev": "node build-node/rollup.config.dev.js",
