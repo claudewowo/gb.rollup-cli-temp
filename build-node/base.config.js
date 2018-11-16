@@ -1,14 +1,14 @@
-import path from 'path';
-import json from 'rollup-plugin-json';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import filesize from 'rollup-plugin-filesize';
-import postcss from 'rollup-plugin-postcss';
-// import html from 'rollup-plugin-fill-html';
-import babel from 'rollup-plugin-babel';
-import del from 'rollup-plugin-delete';
-import license from 'rollup-plugin-license';
-import configs from './config.js';
+const path = require('path');
+const json = require('rollup-plugin-json');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const filesize = require('rollup-plugin-filesize');
+const postcss = require('rollup-plugin-postcss');
+// const html = require('rollup-plugin-fill-html');
+const license = require('rollup-plugin-license');
+const babel = require('rollup-plugin-babel');
+const del = require('rollup-plugin-delete');
+const configs = require('./defaultConfigs.js');
 
 const resolve = p => path.resolve(__dirname, '../', p);
 
@@ -75,7 +75,7 @@ for (let index in configs.buildFiles) {
     })
 }
 
-const rollupConfig = {
+const baseConfig = {
     input: resolve(configs.entry),
     output: outputs,
     plugins: [
@@ -95,7 +95,7 @@ const rollupConfig = {
 };
 
 if (configs.external.length) {
-    rollupConfig.external = configs.external;
+    baseConfig.external = configs.external;
 }
 
-export const baseConfig = rollupConfig;
+module.exports = baseConfig;

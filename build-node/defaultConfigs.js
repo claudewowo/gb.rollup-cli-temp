@@ -1,17 +1,21 @@
-console.log('process.env');
-console.log(process.env);
 
-export default {
-    version : '0.0.1',          // 版本号
+const package = require('../package.json');
+
+// 获取命令行中的参数
+const argvs = JSON.parse(process.env.npm_config_argv);
+
+const defaultConfigs = {
+    name: package.name,         // 项目名称
+    version: package.version,   // 版本号
     copyright: 'gb-fe',         // 版权所有
     external: [],               // 外部依赖
     entry: 'src/index.js',      // 入口 js, 目前只支持1个
-    filename: 'dist/polyfill',  // 输出文件夹/文件名前缀
+    filename: '',               // 输出文件夹/文件名前缀
     uglify: true,               // build 时是否进行压缩
     extractcss: true,           // 提取出 css
     buildFiles: ['es'], // Array ['es', 'cjs', 'iife', ...]
     template: {
-        use: true,              // 是否自动插入 html 用于测试
+        use: false,              // 是否自动插入 html 用于测试
         source: 'src/template/index.html', // html 模版来源
         filename: 'index.html', // 输出文件名 (位于 dist 文件夹下)
         /* injectMode: {           // 插入到 html 中的文件名, 如果不指定则
@@ -20,3 +24,18 @@ export default {
         }, */
     }
 }
+
+argvs.remain.forEach((arg) => {
+    const param = arg.split('=');
+    const key = param[0];
+    let val = param[1];
+    const isarr = /,/.test(val);
+    if (isarr) {
+        val = [...val.split(',')];
+    }
+    defaultConfigs[key] = val;
+});
+
+defaultConfigs.filename = `dist/${defaultConfigs.name}`;
+
+module.exports = defaultConfigs;
