@@ -23,7 +23,7 @@ npm run build
 ### 其他
 
 > dev 环境可以将生成的 js 自动引入到模版里, 方便测试
-> 配置多条 buildFiles, 则会打包多份 js 到模版中, 建议测试时只写1个参数
+> 配置多条 output, 则会打包多份 js 到模版中, 建议测试时只写1个参数
 > 目前还不支持样式提取
 
 ### 自定义配置
@@ -37,11 +37,11 @@ npm run build
     entry: 'src/index.js',      // 入口 js, 目前只支持1个
     uglify: true,               // build 时是否进行压缩
     extractcss: true,           // 提取出 css
-    buildFiles: ['es'], // Array ['es', 'cjs', 'iife', ...]
+    output: ['es'],             // Array ['es', 'cjs', 'iife', ...]  命令行: esm,cjs,iife
 }
 
 // 2, 只有dev支持直接在命令行中设置参数
 // watch和build后续将支持脚手架设置参数
 // dev 后可跟参数覆盖默认参数
-npm run dev name=aaa extractcss=false buildFiles=es,cjs
+npm run dev name=aaa extractcss=false output=es,cjs
 ```

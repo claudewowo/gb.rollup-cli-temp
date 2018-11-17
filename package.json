@@ -1,17 +1,17 @@
 {
   "name": "gb.rollup-cli-temp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "rollup-build-cli-core",
   "scripts": {
-    "dev": "node build-node/rollup.config.dev.js",
-    "watch": "rollup build/rollup.config.dev.js -w",
-    "build": "rollup build/rollup.config.prod.js"
+    "dev": "node build/build-node",
+    "watch": "node build/build-node",
+    "build": "node build/build-node"
   },
   "main": "dist/gb.rollup-cli-temp.min.cjs.js",
   "module": "dist/gb.rollup-cli-temp.min.es.js",
   "dependencies": {
-    "classlist.js": "^1.1.20150312",
-    "babel-polyfill": "^6.26.0"
+    "babel-polyfill": "^6.26.0",
+    "classlist.js": "^1.1.20150312"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -19,7 +19,9 @@
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
     "cheerio": "^1.0.0-rc.2",
     "cssnano": "^4.1.7",
     "hasha": "^3.0.0",
@@ -30,7 +32,7 @@
     "postcss-mixins": "^6.2.0",
     "postcss-nested": "^4.1.0",
     "postcss-preset-env": "^6.4.0",
-    "rollup": "^0.67.1",
+    "rollup": "^0.67.3",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-delete": "^0.1.2",

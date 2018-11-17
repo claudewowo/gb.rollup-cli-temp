@@ -1,5 +1,5 @@
 /**
- * @license gb-fe v1.0.1 2018-11-16 15:37:55
+ * @license gb-fe v1.0.2 2018-11-17 21:34:42
  */
 
 /*
@@ -4360,4 +4360,3 @@ if (!window.location.origin) {
     clearTimeout(id);
   };
 })();
-//# sourceMappingURL=gb.rollup-cli-temp.dev.es.js.map
