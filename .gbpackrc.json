@@ -1,0 +1,10 @@
+{
+  "name": "",
+  "external": [],
+  "copyright": "gb-fe",
+  "entry": "src/index.js",
+  "filename": "",
+  "uglify": true,
+  "extractcss": true,
+  "output": ["esm", "umd"]
+}

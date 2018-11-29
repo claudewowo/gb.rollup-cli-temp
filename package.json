@@ -5,14 +5,11 @@
   "scripts": {
     "dev": "node build/build-node",
     "watch": "node build/build-node",
-    "build": "node build/build-node"
+    "build": "node build/build-node",
+    "prepack": "node build/build-node"
   },
-  "main": "dist/gb.rollup-cli-temp.min.cjs.js",
-  "module": "dist/gb.rollup-cli-temp.min.es.js",
-  "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "classlist.js": "^1.1.20150312"
-  },
+  "main": "",
+  "module": "",
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -25,6 +22,7 @@
     "cheerio": "^1.0.0-rc.2",
     "cssnano": "^4.1.7",
     "hasha": "^3.0.0",
+    "postcss-assets": "^5.0.0",
     "postcss-color-function": "^4.0.1",
     "postcss-cssnext": "^3.1.0",
     "postcss-extend": "^1.0.5",
@@ -32,6 +30,7 @@
     "postcss-mixins": "^6.2.0",
     "postcss-nested": "^4.1.0",
     "postcss-preset-env": "^6.4.0",
+    "postcss-units": "^1.2.1",
     "rollup": "^0.67.3",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -42,9 +41,8 @@
     "rollup-plugin-license": "^0.7.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-postcss": "^1.6.2",
-    "rollup-plugin-serve": "^0.6.0",
-    "rollup-plugin-uglify": "^6.0.0",
-    "uglify-js": "^3.4.9"
+    "rollup-plugin-uglify-es": "0.0.1",
+    "shelljs": "^0.8.3"
   },
   "keywords": [
     "rollup"

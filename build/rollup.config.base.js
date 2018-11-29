@@ -24,11 +24,11 @@ const buildTime = {
         let hour = now.getHours();
         let minute = now.getMinutes();
         let second = now.getSeconds();
-        month < 10 ? month = `0${month}` : '';
-        date < 10 ? date = `0${date}` : '';
-        hour < 10 ? hour = `0${hour}` : '';
-        minute < 10 ? minute = `0${minute}` : '';
-        second < 10 ? second = `0${second}` : '';
+        month < 10 ? (month = `0${month}`) : '';
+        date < 10 ? (date = `0${date}`) : '';
+        hour < 10 ? (hour = `0${hour}`) : '';
+        minute < 10 ? (minute = `0${minute}`) : '';
+        second < 10 ? (second = `0${second}`) : '';
         this.date = [year, '', month, '', date, '', hour, '', minute, '', second];
 
         return this.formatter(format);
@@ -58,20 +58,26 @@ const buildTime = {
     copyright(format = '-- ::') {
         return this.init(format);
     }
-}
+};
 
 const timeForCopyright = buildTime.copyright();
-const fileFormat = `${configs.filename}.${env === 'build' ? 'min' : 'dev'}.`;
 const banner = `@license ${configs.copyright} v${configs.version} ${timeForCopyright}\n`;
 const outputs = [];
 
 for (let index in configs.output) {
-    const item = configs.output[index];
-    outputs.push({
+    const item = configs.output[index].toLowerCase();
+    const output = {
         format: item,
-        file: `${fileFormat}${item}.js`,
-        sourcemap,
-    })
+        file: `${configs.filename}.${item}.js`,
+        sourcemap
+    };
+
+    if (item === 'umd') {
+        const pathLen = configs.filename.split('/');
+        output.name = pathLen[pathLen.length - 1];
+    }
+
+    outputs.push(output);
 }
 
 const baseConfig = {
@@ -81,22 +87,19 @@ const baseConfig = {
         json(),
         nodeResolve(),
         babel({
-            exclude: 'node_modules/**',
+            exclude: 'node_modules/**'
         }),
         postcss({
-            extract: configs.extractcss,
+            extract: configs.extractcss
         }),
         commonjs(),
         filesize(),
-        license({ banner }),
-    ],
+        license({ banner })
+    ]
 };
 
 if (configs.external.length) {
     baseConfig.external = configs.external;
 }
 
-export {
-    baseConfig,
-    outputs,
-};
+export { baseConfig, outputs };
